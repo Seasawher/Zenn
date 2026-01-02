@@ -1,4 +1,3 @@
-/-
 ---
 title: "Leanでリストの「末尾の要素を取得する関数」について"
 emoji: "😸"
@@ -6,8 +5,8 @@ type: "tech"
 topics: ["Lean", "Lean4", "形式証明"]
 published: false
 ---
--/
 
+```lean
 import Lean.LibrarySuggestions.Default
 
 namespace List
@@ -74,3 +73,4 @@ example (as : List α) (h : as ≠ []) : as.dropEnd ++ [as.last h] = as := by
   fun_induction dropEnd with grind [= last]
 
 end List
+```
