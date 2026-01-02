@@ -126,6 +126,8 @@ theorem List.isSubseq_iff_Subseq [DecidableEq α] (xs ys : List α) :
 instance [DecidableEq α] : Decidable (Subseq xs ys) :=
   decidable_of_iff (xs.isSubseq ys = true) (@List.isSubseq_iff_Subseq _ _ xs ys)
 
+#guard Subseq [1, 3] [0, 1, 2, 3]
+
 /- ## 二項関係としての性質を示す
 
 部分リストであるという二項関係は、反射的かつ推移的かつ反対称的です。
@@ -148,3 +150,9 @@ theorem List.Subseq_antisymm (h₁ : Subseq xs ys) (h₂ : Subseq ys xs) : xs = 
 
 -- 定理の前提条件が満たされたときにインスタンス化されるように指定する
 grind_pattern List.Subseq_antisymm => Subseq xs ys, Subseq ys xs
+
+/- ## 感想
+
+このまま基本的な性質をずんずん示していくのも楽しいと思いますが、この記事ではこの辺でやめておきます。
+`grind`が非常に強力で、証明が全部１行で終わってしまったのには少し驚きました。
+-/
