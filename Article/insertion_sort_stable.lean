@@ -4,12 +4,14 @@ title: "挿入ソートの安定性をLeanで形式化する"
 emoji: "😸"
 type: "tech"
 topics: ["Lean", "Lean4", "形式証明"]
-published: false
+published: true
 ---
 -/
 
 /-
 ## 挿入ソートを定義して、ソートであることを示す
+
+まず話の前提として、挿入ソートを定義してそれがソート済みのリストを返すことを証明します。
 -/
 import Batteries
 
@@ -52,8 +54,14 @@ theorem sorted_insertionSort (as : List α) : Sorted (insertionSort as) := by
 
 end List
 
+/- ## 安定性を示す
 
--- Key を与えてもう一度
+本題は安定性でした。
+安定性の表現として、ここでは`key : α → β`という関数を導入し、「`key`の値によってソートする」という関数に書き換えます。
+Mathlibでは異なるアプローチをとっていますが、ここでこの方法を採用したのは、`β`が仮に Linear Order であっても意味を失わないようにするためです。
+
+-/
+
 namespace List
 
 variable {α : Type}
@@ -69,13 +77,13 @@ def orderedInsertByKey (a : α) (as : List α) (key : α → β) : List α :=
     else
       b :: orderedInsertByKey a bs key
 
-/-- 挿入ソート -/
+/-- 挿入ソート(key 付) -/
 def insertionSortByKey (as : List α) (key : α → β) : List α :=
   match as with
   | [] => []
   | a :: bs => orderedInsertByKey a (insertionSortByKey bs key) key
 
-/-- 指定された key に従ってソート済みと判定される -/
+/-- 指定された key に従ってソート済みか判定 -/
 abbrev SortedByKey (as : List α) (key : α → β) := as.map key |>.IsChain (· ≤ ·)
 
 variable [Std.IsLinearOrder β]
@@ -89,14 +97,9 @@ theorem sorted_orderedInsertByKey (a : α) (as : List α) (key : α → β) (h :
 theorem sorted_insertionSortByKey (as : List α) (key : α → β) : SortedByKey (insertionSortByKey as key) key := by
   fun_induction insertionSortByKey with grind
 
-end List
 
-/- ## 安定性を形式化する -/
-variable {α : Type}
 variable {β : Type} [LE β] [DecidableLE β]
 variable (as : List α) (key : α → β)
-
-open List
 
 @[grind <-]
 theorem sublist_orderedInsertByKey (a : α) (c as : List α) (key : α → β)
@@ -109,6 +112,18 @@ theorem cons_sublist_orderedInsertByKey (a : α) (c as : List α) (key : α → 
     (h : c <+ as) : a :: c <+ orderedInsertByKey a as key := by
   induction h generalizing a with simp <;> grind [IsChain]
 
-example (c l : List α) (hcl : c <+ l) (hc : c.SortedByKey key) [Std.IsLinearOrder β] :
+/-- 挿入ソートは安定 -/
+theorem insertionSort_stable (c l : List α) (hcl : c <+ l) (hc : c.SortedByKey key) [Std.IsLinearOrder β] :
     c <+ insertionSortByKey l key := by
   fun_induction insertionSortByKey l key generalizing c with grind
+
+end List
+
+/- ## 感想
+
+* ここではMathlibにおける安定性の定義に文句をつけていますが、もしかしたら私の理解不足で、Mathlibが正しいのかもしれません。
+* ここで示している安定性は、「`key`の値が等しい要素が元のリストと等しい順序で並ぶ」という一般的な定義より少し強いものになっています。
+  部分リスト(非連続であることに注意)の言葉で書いた方がわかりやすく、しかも強いならそれでいいなと思ってこうしました。
+* `insertionSort`の安定性について話をしているにも関わらず、`insertionSortByKey`という別な関数の安定性を証明しているのはちょっともやもやします。
+  しかし、`α`が Linear Order であるときには `l : List α` に対するどんなソートも安定になるような気がしている（間違っていたらコメントで教えてください）ので、こういう定義がいいかなと思いました。
+-/
