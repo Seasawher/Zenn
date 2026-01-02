@@ -11,7 +11,7 @@ published: false
 /-
 ## 挿入ソートを定義して、ソートであることを示す
 -/
-import Lean.LibrarySuggestions.Default
+import Batteries
 
 namespace List
 
@@ -36,21 +36,7 @@ def insertionSort (as : List α) : List α :=
   | [] => []
   | a :: bs => orderedInsert a (insertionSort bs)
 
-/-
-## 「ソート済み」を定義する
--/
-
-/-- 二項関係Rがリストの隣接要素に対して成立する。
-たとえば、`[a, b, c].IsChain R` は `R a b ∧ R b c` と等しい。-/
-@[grind]
-inductive IsChain (R : α → α → Prop) : List α → Prop
-  | nil : IsChain R []
-  | single (a : α) : IsChain R [a]
-  | cons {a b : α} {bs : List α} (h₁ : R a b) (h₂ : IsChain R (b :: bs)) :
-    IsChain R (a :: b :: bs)
-
 abbrev Sorted (as : List α) := as.IsChain (· ≤ ·)
-
 
 -- この仮定が必要
 variable [Std.IsLinearOrder α]
@@ -58,7 +44,7 @@ variable [Std.IsLinearOrder α]
 @[grind =>]
 theorem sorted_orderedInsert (a : α) (as : List α) (h : Sorted as) :
     Sorted (orderedInsert a as) := by
-  induction as with grind
+  induction as with grind [IsChain]
 
 @[grind <=]
 theorem sorted_insertionSort (as : List α) : Sorted (insertionSort as) := by
@@ -121,7 +107,7 @@ theorem sublist_orderedInsertByKey (a : α) (c as : List α) (key : α → β)
 theorem cons_sublist_orderedInsertByKey (a : α) (c as : List α) (key : α → β)
     (hc : (a :: c).SortedByKey key) (has : as.SortedByKey key)
     (h : c <+ as) : a :: c <+ orderedInsertByKey a as key := by
-  induction h generalizing a with simp <;> grind
+  induction h generalizing a with simp <;> grind [IsChain]
 
 example (c l : List α) (hcl : c <+ l) (hc : c.SortedByKey key) [Std.IsLinearOrder β] :
     c <+ insertionSortByKey l key := by

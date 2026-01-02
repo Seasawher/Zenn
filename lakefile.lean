@@ -8,8 +8,8 @@ package Articles where
 lean_lib Article where
   globs := #[.submodules `Article]
 
-require mdgen from git
-  "https://github.com/Seasawher/mdgen" @ "main"
+require "Seasawher" / "mdgen" @ git "main"
+require "leanprover-community" / "batteries" @ git "main"
 
 def runCmdWithOutput (input : String) (stdIn : Option String := none) : IO String := do
   let cmdList := input.splitOn " "
