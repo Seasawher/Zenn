@@ -73,7 +73,7 @@ namespace List
 variable {α : Type}
 variable {β : Type} [LE β] [DecidableLE β]
 
-@[grind]
+@[grind, simp]
 def orderedInsertByKey (a : α) (as : List α) (key : α → β) : List α :=
   match as with
   | [] => [a]
@@ -112,12 +112,17 @@ variable (as : List α) (key : α → β)
 
 open List
 
-example (c l : List α) (hcl : c <+ l) (hc : c.SortedByKey key) :
+@[grind <-]
+theorem sublist_orderedInsertByKey (a : α) (c as : List α) (key : α → β)
+    (h : c <+ as) : c <+ orderedInsertByKey a as key := by
+  induction h with grind
+
+@[grind <-]
+theorem cons_sublist_orderedInsertByKey (a : α) (c as : List α) (key : α → β)
+    (hc : (a :: c).SortedByKey key) (has : as.SortedByKey key)
+    (h : c <+ as) : a :: c <+ orderedInsertByKey a as key := by
+  induction h generalizing a with simp <;> grind
+
+example (c l : List α) (hcl : c <+ l) (hc : c.SortedByKey key) [Std.IsLinearOrder β] :
     c <+ insertionSortByKey l key := by
-  fun_induction insertionSortByKey l key generalizing c with
-  | case1 =>
-    grind
-  | case2 a as ih =>
-    -- try?
-    -- わかんねぇ
-    sorry
+  fun_induction insertionSortByKey l key generalizing c with grind
