@@ -44,7 +44,7 @@ Lean の標準ライブラリには、この概念は`List.isPrefixOf`として�
 その方針で定義してみましょう。
 -/
 
-/-- リスト`xs`が`ys`の接頭辞であることを主張する帰納的述語 -/
+/-- リスト`xs`が`ys`の接頭辞であることを主張する述語 -/
 @[grind =]
 def List.Prefix (xs ys : List α) : Prop := ∃ zs : List α, ys = xs ++ zs
 
