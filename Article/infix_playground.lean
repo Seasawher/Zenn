@@ -57,6 +57,8 @@ example : List.IsInfix [2, 3] [1, 2, 3, 4] := by
 
 ここで与えた決定可能インスタンスは素朴で証明しやすいですが、実行効率的には最善ではないです。
 （`isPrefixOf`による判定を無策に繰り返すため）
+また、Mathlib には既に決定可能性インスタンスがありますね: https://leanprover-community.github.io/mathlib4_docs/Mathlib/Data/List/Infix.html#List.decidableInfix
+
 こういうパターンの決定には KMP法（Knuth-Morris-Pratt法）のような効率的な方法があります。
 KMP法のLeanによる実装は存在します。
 
