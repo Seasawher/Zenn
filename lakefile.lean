@@ -10,7 +10,6 @@ lean_lib Article where
 
 require "Seasawher" / "mdgen" @ git "main"
 require "leanprover-community" / "batteries" @ git "main"
-require "leanprover-community" / "LeanSearchClient" @ git "main"
 
 def runCmdWithOutput (input : String) (stdIn : Option String := none) : IO String := do
   let cmdList := input.splitOn " "
