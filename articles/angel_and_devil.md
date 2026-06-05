@@ -9,8 +9,10 @@ published: true
 # 天使と悪魔の論理パズルをLeanで解く
 
 :::message
-この記事は、筆者が Lean by Example に投稿した記事 [天使と悪魔の論理パズル](https://lean-ja.github.io/lean-by-example/EXTRA/AngelAndDevil.html) のコピーです。
+* この記事は、筆者が Lean by Example に投稿した記事 [天使と悪魔の論理パズル](https://lean-ja.github.io/lean-by-example/EXTRA/AngelAndDevil.html) のコピーです。
 Lean のバージョン更新などが行われるのは Lean by Example に投稿したほうです。
+
+* Lean は定理証明支援系ですが、この記事では普通のプログラミング言語として使い、解空間を探索して解を見つけるという方法で問題を解きます。証明はしません。
 :::
 
 次の古典的な論理パズルを Lean で解いてみましょう。
