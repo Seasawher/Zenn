@@ -43,3 +43,8 @@ Lean が読める人でも何をしているのかわかる人は少ないと思
 まだ「手動でクリックする」手間が残っているので完全自動ではないですが、次に「try this suggestion を自動で適用する CLI」を書けば自動適用できると思います。
 
 そしてそういう CLI は Lean FRO 公式が用意してくれるかもしれないので、結構期待できると思います。
+なぜかというと、非推奨警告に対して try this code action を生成するという RFC があって、それがもし通れば「code action を自動適用する」ことは当然関心に上るはずだからです。
+
+なお、非公式でよければ「try this を自動適用する CLI」は既にあります。
+
+https://github.com/thorimur/skimmer/tree/main
